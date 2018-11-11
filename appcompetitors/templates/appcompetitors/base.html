@@ -22,14 +22,14 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="{% url 'appcompetitors-home' %}">Django: Competitors</a>
+          <a class="navbar-brand mr-4" href="{% url 'competitors:home' %}">Django: Competitors</a>
            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="{% url 'appcompetitors-home' %}">Home</a>
-              <a class="nav-item nav-link" href="{% url 'appcompetitors-guitars' %}">Guitars</a>
+              <a class="nav-item nav-link" href="{% url 'competitors:home' %}">Home</a>
+              <a class="nav-item nav-link" href="{% url 'competitors:guitars' %}">Guitars</a>
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -40,10 +40,18 @@
         </div>
       </nav>
     </header>
+
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
-          {% block content %}{% endblock %}
+            {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+            {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">
           <div class="content-section">
