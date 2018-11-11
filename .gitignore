@@ -1,0 +1,5 @@
+.envs/
+*.pyc
+*.swp
+local_settings.py
+db.sqlite3
