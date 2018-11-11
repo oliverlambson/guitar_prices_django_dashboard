@@ -1,0 +1,27 @@
+<h1>Guitars</h1>
+{% if guitar_list %}
+<table>
+    <tr>
+        <th>Brand</th>
+        <th>Sub-brand</th>
+        <th>Range</th>
+        <th>Model</th>
+        <th>Variant</th>
+        <th>Year</th>
+        <th>Price</th>
+    </tr>
+    {% for guitar in guitar_list %}
+    <tr>
+        <td>{{ guitar.brand.name }}</td>
+        <td>{{ guitar.subbrand.name }}</td>
+        <td>{{ guitar.rnge.name }}</td>
+        <td>{{ guitar.model.name }}</td>
+        <td>{{ guitar.variant }}</td>
+        <td>{{ guitar.year }}</td>
+        <td>{{ guitar.price }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p>No guitars to display.</p>
+{% endif %}
