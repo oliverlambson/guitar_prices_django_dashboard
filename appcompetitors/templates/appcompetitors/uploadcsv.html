@@ -1,7 +1,8 @@
 {% extends 'appcompetitors/base.html' %}
 
 {% block content %}
-<h2>Upload CSV</h2>
+
+<!-- FORM -->
 <form enctype="multipart/form-data" action={% url 'competitors:upload_csv' %} method="post">
     {% csrf_token %}
     {{ form.as_p }}

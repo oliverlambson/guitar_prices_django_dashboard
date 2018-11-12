@@ -1,18 +1,19 @@
 {% extends 'appcompetitors/base.html' %}
 
 {% block content %}
-<h2>List of Guitars</h2>
+
+<!-- TABLE -->
 {% if guitar_list %}
-<table class="table table-hover table-responsive">
+<table>
     <thead>
         <tr>
-            <th scope="col">Brand</th>
-            <th scope="col">Sub-brand</th>
-            <th scope="col">Range</th>
-            <th scope="col">Model</th>
-            <th scope="col">Variant</th>
-            <th scope="col">Year</th>
-            <th scope="col">Price (US$)</th>
+            <th>Brand</th>
+            <th>Sub-brand</th>
+            <th>Range</th>
+            <th>Model</th>
+            <th>Variant</th>
+            <th>Year</th>
+            <th>Price (US$)</th>
         </tr>
     </thead>
     <tbody>
@@ -30,33 +31,31 @@
     </tbody>
 </table>
 
+<!-- PAGINATION -->
 {% if guitar_list.has_other_pages %}
-<nav>
-    <ul class="pagination justify-content-center">
-        {% if guitar_list.has_previous %}
-        <li class="page-item"><a class="page-link" href="?page={{ guitar_list.previous_page_number }}">&laquo;</a></li>
-        {% else %}
-        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-        {% endif %}
+    {% if guitar_list.has_previous %}
+        <a href="?page={{ guitar_list.previous_page_number }}">&laquo;</a>
+    {% else %}
+        &laquo;
+    {% endif %}
 
-        {% for i in guitar_list.paginator.page_range %}
+    {% for i in guitar_list.paginator.page_range %}
         {% if guitar_list.number == i %}
-        <li class="page-item disabled"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+            {{ i }} (current)
         {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            <a href="?page={{ i }}">{{ i }}</a>
         {% endif %}
-        {% endfor %}
+    {% endfor %}
 
-        {% if guitar_list.has_next %}
-        <li class="page-item"><a class="page-link" href="?page={{ guitar_list.next_page_number }}">&raquo;</a></li>
-        {% else %}
-        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
-        {% endif %}
-    </ul>
-</nav>
+    {% if guitar_list.has_next %}
+        <a href="?page={{ guitar_list.next_page_number }}">&raquo;</a>
+    {% else %}
+        &raquo;
+    {% endif %}
 {% endif %}
 
 {% else %}
-    <p>No guitars to display.</p>
+    No guitars to display.
 {% endif %}
+
 {% endblock %}
