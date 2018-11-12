@@ -2,10 +2,68 @@
 
 {% block content %}
 
+<!-- ALERTS FOR GUITARS ADDED -->
+{% if entries_added %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <h4 class="alert-heading"> CSV Processed</h4>
+    {% if entries_added.brands %}
+        <h5>Brands added:</h5>
+        <ul>
+        {% for brand in entries_added.brands %}
+            <li>{{ brand }}</li>
+        {% endfor %}
+        </ul>
+        <hr>
+    {% endif %}
+    {% if entries_added.subbrands %}
+        <h5>Subbrands added:</h5>
+        <ul>
+        {% for subbrand in entries_added.subbrands %}
+            <li>{{ subbrand }}</li>
+        {% endfor %}
+        </ul>
+        <hr>
+    {% endif %}
+    {% if entries_added.ranges %}
+        <h5>Ranges added:</h5>
+        <ul>
+        {% for range_name in entries_added.ranges %}
+            <li>{{ range_name }}</li>
+        {% endfor %}
+        </ul>
+        <hr>
+    {% endif %}
+    {% if entries_added.models %}
+        <h5>Models added:</h5>
+        <ul>
+        {% for model in entries_added.models %}
+            <li>{{ model }}</li>
+        {% endfor %}
+        </ul>
+        <hr>
+    {% endif %}
+    {% if entries_added.guitars %}
+        <h5>Guitars added:</h5>
+        <ul>
+        {% for guitar in entries_added.guitars %}
+            <li>{{ guitar }}</li>
+        {% endfor %}
+        </ul>
+        <hr>
+    {% endif %}
+    <!-- dismiss button -->
+    <button type="button" class="close" data-dismiss="alert">
+        <span>&times;</span>
+    </button>
+</div>
+{% endif %}
+
+
 <!-- FORM -->
+{% load crispy_forms_tags %}
 <form enctype="multipart/form-data" action={% url 'competitors:upload_csv' %} method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form|crispy }}
     <input type="submit" value="Upload">
 </form>
 

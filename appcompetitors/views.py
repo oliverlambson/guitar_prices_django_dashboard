@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
@@ -35,30 +35,31 @@ def guitars(request):
         'title': 'Guitars',
         'guitar_list': guitar_list
     }
+
     return render(request, 'appcompetitors/guitars.html', context)
 
 @user_passes_test(lambda u: u.is_superuser)
 def upload_csv(request):
+    context = {}
     if request.method == 'POST':
         form = UploadCSVForm(request.POST, request.FILES)
         if form.is_valid():
-        # if True:
             csv_file = request.FILES['file']
             if not csv_file.name.endswith('.csv'):
                 messages.error(request, 'File is not CSV type')
-                return HttpResponseRedirect(reverse('competitors:guitars'))
+                return redirect('competitors:guitars')
             if csv_file.multiple_chunks():
                 messages.error(
                     request,
                     f'Uploaded file is too big ({csv_file.size/(1e6):.2f} MB).'
                 )
-                return HttpResponseRedirect(reverse('competitors:guitars'))
-            add_csv_to_db(csv_file)
-            return HttpResponseRedirect(reverse('competitors:guitars'))
+                return redirect('competitors:guitars')
+            entries_added = add_csv_to_db(csv_file)
+            context['entries_added'] = entries_added
     else:
         form = UploadCSVForm()
-    context = {
-        'title': 'Upload CSV',
-        'form': form,
-    }
+
+    context['title'] = 'Upload CSV'
+    context['form'] = form
+
     return render(request, 'appcompetitors/uploadcsv.html', context)

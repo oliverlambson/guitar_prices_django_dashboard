@@ -4,58 +4,75 @@
 
 <!-- TABLE -->
 {% if guitar_list %}
-<table>
-    <thead>
-        <tr>
-            <th>Brand</th>
-            <th>Sub-brand</th>
-            <th>Range</th>
-            <th>Model</th>
-            <th>Variant</th>
-            <th>Year</th>
-            <th>Price (US$)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for guitar in guitar_list %}
-        <tr>
-            <td>{{ guitar.brand.name }}</td>
-            <td>{{ guitar.subbrand.name }}</td>
-            <td>{{ guitar.rnge.name }}</td>
-            <td>{{ guitar.model.name }}</td>
-            <td>{{ guitar.variant }}</td>
-            <td class="text-right">{{ guitar.year }}</td>
-            <td class="text-right" nowrap="nowrap">{{ guitar.price }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <!-- tables need opt-in styling from bootstrap (i.e. not-default) -->
+    <div class="table-responsive"> <!-- horizontal scroll -->
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Sub-brand</th>
+                    <th scope="col">Range</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Variant</th>
+                    <th scope="col" class="text-right">Year</th>
+                    <th scope="col" class="text-right">Price (US$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for guitar in guitar_list %}
+                <tr scope="row">
+                    <td>{{ guitar.brand.name }}</td>
+                    <td>{{ guitar.subbrand.name }}</td>
+                    <td>{{ guitar.rnge.name }}</td>
+                    <td>{{ guitar.model.name }}</td>
+                    <td>{{ guitar.variant }}</td>
+                    <td class="text-right">{{ guitar.year }}</td>
+                    <td class="text-right" nowrap="nowrap">{{ guitar.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<!-- PAGINATION -->
-{% if guitar_list.has_other_pages %}
-    {% if guitar_list.has_previous %}
-        <a href="?page={{ guitar_list.previous_page_number }}">&laquo;</a>
-    {% else %}
-        &laquo;
-    {% endif %}
-
-    {% for i in guitar_list.paginator.page_range %}
-        {% if guitar_list.number == i %}
-            {{ i }} (current)
+    <!-- PAGINATION -->
+    {% if guitar_list.has_other_pages %}
+    <ul class="pagination justify-content-center">
+        {% if guitar_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ guitar_list.previous_page_number }}">&laquo;</a>
         {% else %}
-            <a href="?page={{ i }}">{{ i }}</a>
+        <li class="page-item disabled">
+            <p class="page-link">&laquo;</p>
         {% endif %}
-    {% endfor %}
+        </li>
 
-    {% if guitar_list.has_next %}
-        <a href="?page={{ guitar_list.next_page_number }}">&raquo;</a>
-    {% else %}
-        &raquo;
+        {% for i in guitar_list.paginator.page_range %}
+            {% if guitar_list.number == i %}
+            <li class="page-item active">
+                <p class ="page-link">{{ i }}</p>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+            </li>
+        {% endfor %}
+
+        {% if guitar_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ guitar_list.next_page_number }}">&raquo;</a>
+        {% else %}
+        <li class="page-item disabled">
+            <p class="page-link">&raquo;</p>
+        {% endif %}
+        </li>
+    </ul>
     {% endif %}
-{% endif %}
 
 {% else %}
+<p class="lead">
     No guitars to display.
+</p>
 {% endif %}
+
 
 {% endblock %}

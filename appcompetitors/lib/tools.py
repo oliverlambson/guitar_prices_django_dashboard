@@ -2,11 +2,19 @@ import csv
 import codecs
 
 from django.utils import timezone
+from django.contrib import messages
 
 from appcompetitors.models import Brand, SubBrand, Range, Model, Guitar
 
 
 def add_csv_to_db(file):
+    entries_added = {
+        'brands': [],
+        'subbrands': [],
+        'ranges': [],
+        'models': [],
+        'guitars': []
+    }
     csv_rows = csv.reader(codecs.iterdecode(file, 'utf-8'), delimiter=';')
     i = 0
     types_ok = True
@@ -57,16 +65,19 @@ def add_csv_to_db(file):
                     'date_updated': timezone.now()
                 }
             )
-
             if new_brand:
-                print(f"Brand added:     {brand.name}")
+                entries_added['brands'].append(brand.name)
             if new_sub_brand:
-                print(f"Sub-brand added: {sub_brand.name}")
+                entries_added['subbrands'].append(sub_brand.name)
             if new_range:
-                print(f"Range added:     {range_name.name}")
+                entries_added['ranges'].append(range_name.name)
             if new_model:
-                print(f"Model added:     {model.name}")
+                entries_added['models'].append(model.name)
             if new_guitar:
-                print(f"Guitar added:    {brand.name} {sub_brand.name} "
-                      f"{range_name.name} {model.name} {arg_variant} "
-                      f"{arg_year} ${arg_price:.2f}")
+                entries_added['guitars'].append(
+                    f"{brand.name} {sub_brand.name} "
+                    f"{range_name.name} {model.name} {arg_variant} "
+                    f"{arg_year} ${arg_price:.2f}"
+                )
+
+    return entries_added
