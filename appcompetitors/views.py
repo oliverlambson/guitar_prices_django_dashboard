@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Guitar
 from .forms import UploadCSVForm
@@ -20,6 +21,15 @@ def guitars(request):
     guitar_list = Guitar.objects.all()
     for guitar in guitar_list: # format price
         guitar.price = f'{guitar.price:,.2f}'.replace(',', ' ')
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(guitar_list, 10)
+    try:
+        guitar_list = paginator.page(page)
+    except PageNotAnInteger:
+        guitar_list = paginator.page(1)
+    except EmptyPage:
+        guitar_list = paginator.page(paginator.num_pages)
 
     context = {
         'title': 'Guitars',
