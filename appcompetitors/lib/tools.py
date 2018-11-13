@@ -81,3 +81,7 @@ def add_csv_to_db(file):
                 )
 
     return entries_added
+
+
+def generate_plots():
+    pass

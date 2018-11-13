@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('guitars/', views.guitars, name='guitars'),
     path('upload_csv/', views.upload_csv, name='upload_csv'),
+    path('plots/', views.plots, name='plots'),
 ]

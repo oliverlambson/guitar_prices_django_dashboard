@@ -10,9 +10,9 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
         {% if title %}
-            <title>Guitar Brands</title>
+            <title>Guitar Brands  - {{ title }}</title>
         {% else %}
-            <title>Guitar Brands - {{ title }}</title>
+            <title>Guitar Brands</title>
         {% endif %}
     </head>
     <body>
@@ -30,6 +30,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'competitors:guitars' %}">Guitars</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'competitors:plots' %}">Plots</a>
+                    </li>
                 </ul>
                 <!-- right side -->
                 <ul class="navbar-nav mt-2 mt-lg-0">
@@ -40,8 +43,9 @@
             </div>
 
         </nav>
-
-        <h1>{{ title }}</h1>
+        {% if title %}
+            <h1>{{ title }}</h1>
+        {% endif %}
 
         {% if messages %}
             {% for message in messages %}

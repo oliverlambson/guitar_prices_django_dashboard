@@ -1,0 +1,23 @@
+{% extends 'appcompetitors/base.html' %}
+{% load static %}
+{% block content %}
+<div id="chart"></div>
+
+<!-- Load c3.css -->
+<link href="{% static 'appcompetitors/external/css/c3.css'%}" rel="stylesheet">
+<!-- Load d3.js and c3.js -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="{% static 'appcompetitors/external/js/c3.min.js' %}"></script>
+
+<script>
+var chart = c3.generate({
+bindto: '#chart',
+data: {
+  columns: [
+    ['data1', 30, 200, 100, 400, 150, 250],
+    ['data2', 50, 20, 10, 40, 15, 25]
+  ]
+}
+});
+</script>
+{% endblock %}

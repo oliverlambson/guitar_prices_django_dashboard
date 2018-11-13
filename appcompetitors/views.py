@@ -38,6 +38,14 @@ def guitars(request):
 
     return render(request, 'appcompetitors/guitars.html', context)
 
+
+def plots(request):
+    context = {
+        'title': 'Plots'
+    }
+    return render(request, 'appcompetitors/plots.html', context)
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def upload_csv(request):
     context = {}
