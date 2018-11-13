@@ -18,7 +18,7 @@ def index(request):
 
 
 def guitars(request):
-    guitar_list = Guitar.objects.all()
+    guitar_list = Guitar.objects.select_related().all()
     for guitar in guitar_list: # format price
         guitar.price = f'{guitar.price:,.2f}'.replace(',', ' ')
 
