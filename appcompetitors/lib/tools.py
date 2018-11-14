@@ -114,7 +114,7 @@ def generate_plots():
     chart_config['axis']['x']['label']['text'] = 'Price (US$)'
     chart_config['axis']['x']['label']['position'] = 'outer-center'
     # chart_config['axis']['x']['tick']['fit'] = True
-    chart_config['axis']['y']['label']['text'] = 'Probability'
+    chart_config['axis']['y']['label']['text'] = 'Frequency'
     chart_config['axis']['y']['label']['position'] = 'outer-middle'
 
 
@@ -125,6 +125,7 @@ def generate_plots():
         .only('price', 'brand__name', 'subbrand__name')
         .annotate(brand_name=F('brand__name'))
         .annotate(subbrand_name=F('subbrand__name'))
+        .order_by('price')
         .query
     )
     # print(query)
@@ -137,7 +138,7 @@ def generate_plots():
     chart_config['axis']['x']['tick']['values'] = list(x_tick_values)
 
     # process data
-    brands = df['brand_name'].unique()
+    brands = sorted(df['brand_name'].unique())
     all_brands = '\n'.join(brand for brand in brands)
     all_subbrands = {}
 
@@ -151,23 +152,25 @@ def generate_plots():
 
             # CALCULATE HISTOGRAM
             # good source: https://realpython.com/python-histograms/
-            prob, bin_edges = np.histogram(
-                df_sb['price'], bins='auto', density=True
+            freq, bin_edges = np.histogram(
+                df_sb['price'], bins='auto', density=False
             )
             bin_size = bin_edges[1] - bin_edges[0]
             # process to plot on line/step/fill chart
                 # make len(freq) == len(bin_edges)
-            prob = np.append(prob, prob[-1])
+            freq = np.append(freq, freq[-1])
                 # start and end freq and bin_edges at freq of 0
-            prob = np.concatenate([[0], prob, [0]])
+            freq = np.concatenate([[0], freq, [0]])
             bin_edges = np.concatenate([[bin_edges[0]], bin_edges, [bin_edges[-1]]])
 
+            freq = freq.astype(float) # json serializer doesn't like ints
+            
             # write data to chart dict
             chart_config['data']['json'][f'bins_{i}.{j}'] = list(bin_edges)
-            chart_config['data']['json'][f'prob_{i}.{j}'] = list(prob)
-            chart_config['data']['xs'][f'prob_{i}.{j}'] = f'bins_{i}.{j}'
-            chart_config['data']['names'][f'prob_{i}.{j}'] = f'{brand} {subbrand}'
-            chart_config['data']['types'][f'prob_{i}.{j}'] = 'area-step'
+            chart_config['data']['json'][f'freq_{i}.{j}'] = list(freq)
+            chart_config['data']['xs'][f'freq_{i}.{j}'] = f'bins_{i}.{j}'
+            chart_config['data']['names'][f'freq_{i}.{j}'] = f'{brand} {subbrand}'
+            chart_config['data']['types'][f'freq_{i}.{j}'] = 'area-step'
 
             # # CALCULATE KDE
             # # good source: https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
