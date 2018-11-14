@@ -1,7 +1,12 @@
 {% extends 'appcompetitors/base.html' %}
 {% load static %}
 {% block content %}
-<div id="chart"></div>
+<div id="{{ chart_config.bindto|slice:'1:' }}"></div>
+<hr>
+{% comment %}
+<h6>Debug chart_config:</h6>
+<p>{{ chart_config|safe }}</p>
+{% endcomment %}
 
 <!-- Load c3.css -->
 <link href="{% static 'appcompetitors/external/css/c3.css'%}" rel="stylesheet">
@@ -9,15 +14,9 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="{% static 'appcompetitors/external/js/c3.min.js' %}"></script>
 
+{{ chart_config|json_script:"chart_data" }}
 <script>
-var chart = c3.generate({
-bindto: '#chart',
-data: {
-  columns: [
-    ['data1', 30, 200, 100, 400, 150, 250],
-    ['data2', 50, 20, 10, 40, 15, 25]
-  ]
-}
-});
+var data = JSON.parse(document.getElementById('chart_data').textContent)
+var chart = c3.generate(data);
 </script>
 {% endblock %}

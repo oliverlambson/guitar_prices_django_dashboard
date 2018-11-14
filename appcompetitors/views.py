@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Guitar
 from .forms import UploadCSVForm
-from .lib.tools import add_csv_to_db
+from .lib.tools import add_csv_to_db, generate_plots
 
 
 def index(request):
@@ -40,8 +40,10 @@ def guitars(request):
 
 
 def plots(request):
+    chart_config = generate_plots()
     context = {
-        'title': 'Plots'
+        'title': 'Plots',
+        'chart_config': chart_config,
     }
     return render(request, 'appcompetitors/plots.html', context)
 

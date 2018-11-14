@@ -1,8 +1,12 @@
 import csv
 import codecs
+import pandas as pd
+import numpy as np
 
 from django.utils import timezone
 from django.contrib import messages
+from django.db import connection
+from django.db.models import F
 
 from appcompetitors.models import Brand, SubBrand, Range, Model, Guitar
 
@@ -84,4 +88,92 @@ def add_csv_to_db(file):
 
 
 def generate_plots():
-    pass
+    # setup chart format
+    chart_config = {}
+    chart_config['bindto'] = '#chart_test'
+    chart_config['data'] = {
+        'json': {},
+        'xs': {},
+        'names': {},
+        'types': {},
+    }
+    chart_config['line'] = {
+        'step': {
+            'type': 'step-after'
+        }
+    }
+    chart_config['axis'] = {
+        'x': {
+            'label': {},
+            'tick': {},
+        },
+        'y': {
+            'label': {},
+        },
+    }
+    chart_config['axis']['x']['label']['text'] = 'Price (US$)'
+    chart_config['axis']['x']['label']['position'] = 'outer-center'
+    # chart_config['axis']['x']['tick']['fit'] = True
+    chart_config['axis']['y']['label']['text'] = 'Probability'
+    chart_config['axis']['y']['label']['position'] = 'outer-middle'
+
+
+    # store database in pandas dataframe
+    query = str(
+        Guitar.objects
+        .select_related('brand', 'subbrand')
+        .only('price', 'brand__name', 'subbrand__name')
+        .annotate(brand_name=F('brand__name'))
+        .annotate(subbrand_name=F('subbrand__name'))
+        .query
+    )
+    # print(query)
+    df = pd.read_sql_query(query, connection)
+    df.drop(columns=df.filter(like='id').columns, inplace=True)
+    df.drop(columns='name', inplace=True)
+    # print(df.head())
+
+    x_tick_values = range(0,np.max(df['price'])+500,500)
+    chart_config['axis']['x']['tick']['values'] = list(x_tick_values)
+
+    # process data
+    brands = df['brand_name'].unique()
+    all_brands = '\n'.join(brand for brand in brands)
+    all_subbrands = {}
+
+    for i, brand in enumerate(brands):
+        df_b = df.loc[df['brand_name'] == brand]
+        subbrands = df_b['subbrand_name'].unique()
+        all_subbrands[f'{brand}'] = list(subbrands)
+
+        for j, subbrand in enumerate(subbrands):
+            df_sb = df_b.loc[df_b['subbrand_name'] == subbrand]
+
+            # CALCULATE HISTOGRAM
+            # good source: https://realpython.com/python-histograms/
+            prob, bin_edges = np.histogram(
+                df_sb['price'], bins='auto', density=True
+            )
+            bin_size = bin_edges[1] - bin_edges[0]
+            # process to plot on line/step/fill chart
+                # make len(freq) == len(bin_edges)
+            prob = np.append(prob, prob[-1])
+                # start and end freq and bin_edges at freq of 0
+            prob = np.concatenate([[0], prob, [0]])
+            bin_edges = np.concatenate([[bin_edges[0]], bin_edges, [bin_edges[-1]]])
+
+            # write data to chart dict
+            chart_config['data']['json'][f'bins_{i}.{j}'] = list(bin_edges)
+            chart_config['data']['json'][f'prob_{i}.{j}'] = list(prob)
+            chart_config['data']['xs'][f'prob_{i}.{j}'] = f'bins_{i}.{j}'
+            chart_config['data']['names'][f'prob_{i}.{j}'] = f'{brand} {subbrand}'
+            chart_config['data']['types'][f'prob_{i}.{j}'] = 'area-step'
+
+            # # CALCULATE KDE
+            # # good source: https://jakevdp.github.io/blog/2013/12/01/kernel-density-estimation/
+            # kde = gaussian_kde(df_sb['Price'].values)
+            # kde_val_min = np.min(df_sb['Price'].values) - bin_size/2
+            # kde_val_max = np.max(df_sb['Price'].values) + bin_size/2
+            # kde_vals = np.linspace(kde_val_min, kde_val_max, 100)
+            # kde_prob = kde.evaluate(kde_vals)
+    return chart_config
