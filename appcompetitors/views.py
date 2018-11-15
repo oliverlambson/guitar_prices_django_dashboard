@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Guitar
 from .forms import UploadCSVForm
-from .lib.tools import add_csv_to_db, generate_plots
+from .lib.tools import add_csv_to_db, generate_plots, generate_stats
 
 
 def index(request):
@@ -46,6 +46,25 @@ def plots(request):
         'chart_config': chart_config,
     }
     return render(request, 'appcompetitors/plots.html', context)
+
+
+def stats(request):
+    subbrand_list = generate_stats()
+    for sb in subbrand_list: # format price
+        sb['median'] = f"{sb['median']:,.2f}".replace(',', ' ')
+        sb['mean'] = f"{sb['mean']:,.2f}".replace(',', ' ')
+        sb['std'] = f"{sb['std']:,.2f}".replace(',', ' ')
+        sb['skew'] = f"{sb['skew']:,.3f}".replace(',', ' ')
+        sb['kurt'] = f"{sb['kurt']:,.3f}".replace(',', ' ')
+        sb['min'] = f"{sb['min']:,.2f}".replace(',', ' ')
+        sb['max'] = f"{sb['max']:,.2f}".replace(',', ' ')
+        sb['range'] = f"{sb['range']:,.2f}".replace(',', ' ')
+        sb['IQR'] = f"{sb['IQR']:,.2f}".replace(',', ' ')
+    context = {
+        'title': 'Desciptive Stats',
+        'subbrand_list': subbrand_list,
+    }
+    return render(request, 'appcompetitors/stats.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)

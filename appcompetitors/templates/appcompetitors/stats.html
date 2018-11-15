@@ -1,0 +1,64 @@
+{% extends 'appcompetitors/base.html' %}
+
+{% block content %}
+<div class="container pt-3">
+    {% if title %}
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+
+    <!-- TABLE -->
+    {% if subbrand_list %}
+        <!-- tables need opt-in styling from bootstrap (i.e. not-default) -->
+        <div class="table-responsive"> <!-- horizontal scroll -->
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Sub-brand</th>
+                        <th scope="col" class="text-right">Count</th>
+                        <th scope="col" class="text-right">Median (US$)</th>
+                        <th scope="col" class="text-right">Mean (US$)</th>
+                        <th scope="col" class="text-right">Min (US$)</th>
+                        <th scope="col" class="text-right">Max (US$)</th>
+                        <th scope="col" class="text-right">Range (US$)</th>
+                        <th scope="col" class="text-right">IQR (US$)</th>
+                        <th scope="col" class="text-right">&sigma; (US$)</th>
+                        <th scope="col" class="text-right">Skew</th>
+                        <th scope="col" class="text-right">Kurtosis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sb in subbrand_list %}
+                    <tr scope="row">
+                        <td>{{ sb.brand }}</td>
+                        <td>{{ sb.name }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.count }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.median }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.mean }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.min }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.max }}</td>
+                        <td class="text-right" nowrap="nowrap" style="border-left: 2px solid #dee2e6">{{ sb.range }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.IQR }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.std }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.skew }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ sb.kurt }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="lead">
+            No stats to display.
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

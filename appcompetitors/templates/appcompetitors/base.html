@@ -39,13 +39,19 @@
                         <li class="nav-item {% ifequal competitors_plots request.path %}active{% endifequal %}">
                             <a class="nav-link" href="{% url 'competitors:plots' %}">Plots</a>
                         </li>
+                        {% url 'competitors:stats' as competitors_stats %}
+                        <li class="nav-item {% ifequal competitors_stats request.path %}active{% endifequal %}">
+                            <a class="nav-link" href="{% url 'competitors:stats' %}">Stats</a>
+                        </li>
                     </ul>
                     <!-- right side -->
                     <ul class="navbar-nav mt-2 mt-lg-0">
+                        {% if request.user.is_authenticated %}
                         {% url 'competitors:upload_csv' as competitors_upload_csv %}
                         <li class="nav-item {% ifequal competitors_upload_csv request.path %}active{% endifequal %}">
                             <a class="nav-link" href="{% url 'competitors:upload_csv' %}">Upload CSV</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

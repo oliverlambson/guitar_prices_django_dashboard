@@ -181,3 +181,59 @@ def generate_plots():
             # kde_vals = np.linspace(kde_val_min, kde_val_max, 100)
             # kde_prob = kde.evaluate(kde_vals)
     return chart_config
+
+
+def get_brand_subbrand_prices():
+    # store database in pandas dataframe
+    query = str(
+        Guitar.objects
+        .select_related('brand', 'subbrand')
+        .only('price', 'brand__name', 'subbrand__name')
+        .annotate(brand_name=F('brand__name'))
+        .annotate(subbrand_name=F('subbrand__name'))
+        .order_by('price')
+        .query
+    )
+    # print(query)
+    df = pd.read_sql_query(query, connection)
+    df.drop(columns=df.filter(like='id').columns, inplace=True)
+    df.drop(columns='name', inplace=True)
+    # print(df.head())
+    return df
+
+
+def generate_stats():
+    df = get_brand_subbrand_prices()
+    subbrand_list = []
+    brands = df['brand_name'].unique()
+    for brand in brands:
+        df_b = df.loc[df['brand_name'] == brand]
+        subbrands = df_b['subbrand_name'].unique()
+        for sb in subbrands:
+            df_sb = df_b.loc[df_b['subbrand_name'] == sb]
+            median = df_sb['price'].median()
+            count = df_sb['price'].count()
+            mean = df_sb['price'].mean()
+            std = df_sb['price'].std()
+            skew = df_sb['price'].skew()
+            kurt = df_sb['price'].kurt()
+            q0 = df_sb['price'].min()
+            q1 = df_sb['price'].quantile(0.25)
+            q3 = df_sb['price'].quantile(0.75)
+            q4 = df_sb['price'].max()
+
+            subbrand_list.append({
+                'brand': brand,
+                'name': sb,
+                'count': count,
+                'median': np.around(median, 2),
+                'mean': np.around(mean, 2),
+                'std': np.around(std, 2),
+                'skew': np.around(skew, 2),
+                'kurt': np.around(kurt, 2),
+                'min': np.around(q0, 2),
+                'max': np.around(q4, 2),
+                'range': np.around(q4-q0, 2),
+                'IQR': np.around(q3-q1, 2),
+            })
+    return subbrand_list
