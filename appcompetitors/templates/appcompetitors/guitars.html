@@ -5,6 +5,7 @@
 <!-- TABLE -->
 {% if guitar_list %}
     <!-- tables need opt-in styling from bootstrap (i.e. not-default) -->
+
     <div class="table-responsive"> <!-- horizontal scroll -->
         <table class="table table-hover">
             <thead>
@@ -47,6 +48,10 @@
         </li>
 
         {% for i in guitar_list.paginator.page_range %}
+        {% comment %}
+        TODO: add limit to number of pages displayed around current page
+        see comment by user "abc" at: https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
+        {% endcomment %}
             {% if guitar_list.number == i %}
             <li class="page-item active">
                 <p class ="page-link">{{ i }}</p>

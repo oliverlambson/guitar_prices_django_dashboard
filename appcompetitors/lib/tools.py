@@ -164,7 +164,8 @@ def generate_plots():
             bin_edges = np.concatenate([[bin_edges[0]], bin_edges, [bin_edges[-1]]])
 
             freq = freq.astype(float) # json serializer doesn't like ints
-            
+            bin_edges = np.around(bin_edges, decimals=2) # currency format
+
             # write data to chart dict
             chart_config['data']['json'][f'bins_{i}.{j}'] = list(bin_edges)
             chart_config['data']['json'][f'freq_{i}.{j}'] = list(freq)
