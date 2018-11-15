@@ -1,11 +1,24 @@
 {% extends 'appcompetitors/base.html' %}
 {% load static %}
 {% block content %}
-<div id="{{ chart_config.bindto|slice:'1:' }}"></div>
-{% comment %}
-<h6>Debug chart_config:</h6>
-<p>{{ chart_config|safe }}</p>
-{% endcomment %}
+<div class="container pt-3">
+    {% if title %}
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+    <div id="{{ chart_config.bindto|slice:'1:' }}"></div>
+    {% comment %}
+    <h6>Debug chart_config:</h6>
+    <p>{{ chart_config|safe }}</p>
+    {% endcomment %}
+</div>
 
 <!-- Load c3.css -->
 <link href="{% static 'appcompetitors/external/css/c3.css'%}" rel="stylesheet">
@@ -16,6 +29,9 @@
 {{ chart_config|json_script:"chart_data" }}
 <script>
 var data = JSON.parse(document.getElementById('chart_data').textContent)
+// update ticks to be readable on mobile
+data.axis.x.tick.format = function(d) { return (d/1000).toFixed(1); }
+data.axis.x.label.text = "Price (US$ 000's)"
 var chart = c3.generate(data);
 </script>
 {% endblock %}

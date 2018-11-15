@@ -1,5 +1,31 @@
 {% extends 'appcompetitors/base.html' %}
 
 {% block content %}
+<section class="bg-primary text-white">
+    <div class="container py-5">
+        <div class="row my-3 text-center text-lg-left align-items-center">
+            <div class="col-xl-auto col-lg-6">
+                <h1 class="display-3 mb-2">Guitar Brands</h1>
+                <h4 class="text-uppercase font-weight-light">Insight into the state of the solid-body electric guitar market</h4>
+            </div>
+            <div class="col-xl-auto col-lg mr-auto">
 
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container pt-3">
+    {% if title %}
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}

@@ -113,7 +113,7 @@ def generate_plots():
     }
     chart_config['axis']['x']['label']['text'] = 'Price (US$)'
     chart_config['axis']['x']['label']['position'] = 'outer-center'
-    # chart_config['axis']['x']['tick']['fit'] = True
+    chart_config['axis']['x']['tick']['rotate'] = -60
     chart_config['axis']['y']['label']['text'] = 'Frequency'
     chart_config['axis']['y']['label']['position'] = 'outer-middle'
 
@@ -134,7 +134,7 @@ def generate_plots():
     df.drop(columns='name', inplace=True)
     # print(df.head())
 
-    x_tick_values = range(0,np.max(df['price'])+500,500)
+    x_tick_values = range(0,np.max(df['price']),500)
     chart_config['axis']['x']['tick']['values'] = list(x_tick_values)
 
     # process data

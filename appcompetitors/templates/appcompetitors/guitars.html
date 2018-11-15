@@ -1,83 +1,92 @@
 {% extends 'appcompetitors/base.html' %}
 
 {% block content %}
-
-<!-- TABLE -->
-{% if guitar_list %}
-    <!-- tables need opt-in styling from bootstrap (i.e. not-default) -->
-
-    <div class="table-responsive"> <!-- horizontal scroll -->
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Brand</th>
-                    <th scope="col">Sub-brand</th>
-                    <th scope="col">Range</th>
-                    <th scope="col">Model</th>
-                    <th scope="col">Variant</th>
-                    <th scope="col" class="text-right">Year</th>
-                    <th scope="col" class="text-right">Price (US$)</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for guitar in guitar_list %}
-                <tr scope="row">
-                    <td>{{ guitar.brand.name }}</td>
-                    <td>{{ guitar.subbrand.name }}</td>
-                    <td>{{ guitar.rnge.name }}</td>
-                    <td>{{ guitar.model.name }}</td>
-                    <td>{{ guitar.variant }}</td>
-                    <td class="text-right">{{ guitar.year }}</td>
-                    <td class="text-right" nowrap="nowrap">{{ guitar.price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container pt-3">
+    {% if title %}
+    <div class="page-header">
+        <h1>{{ title }}</h1>
     </div>
-
-    <!-- PAGINATION -->
-    {% if guitar_list.has_other_pages %}
-    <ul class="pagination justify-content-center">
-        {% if guitar_list.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ guitar_list.previous_page_number }}">&laquo;</a>
-        {% else %}
-        <li class="page-item disabled">
-            <p class="page-link">&laquo;</p>
-        {% endif %}
-        </li>
-
-        {% for i in guitar_list.paginator.page_range %}
-        {% comment %}
-        TODO: add limit to number of pages displayed around current page
-        see comment by user "abc" at: https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
-        {% endcomment %}
-            {% if guitar_list.number == i %}
-            <li class="page-item active">
-                <p class ="page-link">{{ i }}</p>
-            {% else %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-            {% endif %}
-            </li>
-        {% endfor %}
-
-        {% if guitar_list.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ guitar_list.next_page_number }}">&raquo;</a>
-        {% else %}
-        <li class="page-item disabled">
-            <p class="page-link">&raquo;</p>
-        {% endif %}
-        </li>
-    </ul>
     {% endif %}
 
-{% else %}
-<p class="lead">
-    No guitars to display.
-</p>
-{% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    {% endif %}
+    <!-- TABLE -->
+    {% if guitar_list %}
+        <!-- tables need opt-in styling from bootstrap (i.e. not-default) -->
+        <div class="table-responsive"> <!-- horizontal scroll -->
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Brand</th>
+                        <th scope="col">Sub-brand</th>
+                        <th scope="col">Range</th>
+                        <th scope="col">Model</th>
+                        <th scope="col">Variant</th>
+                        <th scope="col" class="text-right">Year</th>
+                        <th scope="col" class="text-right">Price (US$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for guitar in guitar_list %}
+                    <tr scope="row">
+                        <td>{{ guitar.brand.name }}</td>
+                        <td>{{ guitar.subbrand.name }}</td>
+                        <td>{{ guitar.rnge.name }}</td>
+                        <td>{{ guitar.model.name }}</td>
+                        <td>{{ guitar.variant }}</td>
+                        <td class="text-right">{{ guitar.year }}</td>
+                        <td class="text-right" nowrap="nowrap">{{ guitar.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
+        <!-- PAGINATION -->
+        {% if guitar_list.has_other_pages %}
+        <ul class="pagination justify-content-center">
+            {% if guitar_list.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ guitar_list.previous_page_number }}">&laquo;</a>
+            {% else %}
+            <li class="page-item disabled">
+                <p class="page-link">&laquo;</p>
+            {% endif %}
+            </li>
 
+            {% for i in guitar_list.paginator.page_range %}
+            {% comment %}
+            TODO: add limit to number of pages displayed around current page
+            see comment by user "abc" at: https://simpleisbetterthancomplex.com/tutorial/2016/08/03/how-to-paginate-with-django.html
+            {% endcomment %}
+                {% if guitar_list.number == i %}
+                <li class="page-item active">
+                    <p class ="page-link">{{ i }}</p>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                {% endif %}
+                </li>
+            {% endfor %}
+
+            {% if guitar_list.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ guitar_list.next_page_number }}">&raquo;</a>
+            {% else %}
+            <li class="page-item disabled">
+                <p class="page-link">&raquo;</p>
+            {% endif %}
+            </li>
+        </ul>
+        {% endif %}
+
+    {% else %}
+    <p class="lead">
+        No guitars to display.
+    </p>
+    {% endif %}
+</div>
 {% endblock %}
