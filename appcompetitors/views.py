@@ -51,15 +51,24 @@ def plots(request):
 def stats(request):
     subbrand_list = generate_stats()
     for sb in subbrand_list: # format price
-        sb['median'] = f"{sb['median']:,.2f}".replace(',', ' ')
-        sb['mean'] = f"{sb['mean']:,.2f}".replace(',', ' ')
-        sb['std'] = f"{sb['std']:,.2f}".replace(',', ' ')
-        sb['skew'] = f"{sb['skew']:,.3f}".replace(',', ' ')
-        sb['kurt'] = f"{sb['kurt']:,.3f}".replace(',', ' ')
-        sb['min'] = f"{sb['min']:,.2f}".replace(',', ' ')
-        sb['max'] = f"{sb['max']:,.2f}".replace(',', ' ')
-        sb['range'] = f"{sb['range']:,.2f}".replace(',', ' ')
-        sb['IQR'] = f"{sb['IQR']:,.2f}".replace(',', ' ')
+        # sb['median'] = f"{sb['median']:,.2f}".replace(',', ' ')
+        # sb['mean'] = f"{sb['mean']:,.2f}".replace(',', ' ')
+        # sb['std'] = f"{sb['std']:,.2f}".replace(',', ' ')
+        # sb['skew'] = f"{sb['skew']:,.3f}".replace(',', ' ')
+        # sb['kurt'] = f"{sb['kurt']:,.3f}".replace(',', ' ')
+        # sb['min'] = f"{sb['min']:,.2f}".replace(',', ' ')
+        # sb['max'] = f"{sb['max']:,.2f}".replace(',', ' ')
+        # sb['range'] = f"{sb['range']:,.2f}".replace(',', ' ')
+        # sb['IQR'] = f"{sb['IQR']:,.2f}".replace(',', ' ')
+        sb['median'] = f"{sb['median']:.2f}"
+        sb['mean'] = f"{sb['mean']:.2f}"
+        sb['std'] = f"{sb['std']:.2f}"
+        sb['skew'] = f"{sb['skew']:.3f}"
+        sb['kurt'] = f"{sb['kurt']:.3f}"
+        sb['min'] = f"{sb['min']:.2f}"
+        sb['max'] = f"{sb['max']:.2f}"
+        sb['range'] = f"{sb['range']:.2f}"
+        sb['IQR'] = f"{sb['IQR']:.2f}"
     context = {
         'title': 'Desciptive Stats',
         'subbrand_list': subbrand_list,
