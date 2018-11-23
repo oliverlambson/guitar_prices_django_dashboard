@@ -134,7 +134,8 @@ def generate_plots():
     df.drop(columns='name', inplace=True)
     # print(df.head())
 
-    x_tick_values = range(0,np.max(df['price']),500)
+    max_price = int(np.max(df['price']))
+    x_tick_values = range(0,max_price,500)
     chart_config['axis']['x']['tick']['values'] = list(x_tick_values)
 
     # process data
