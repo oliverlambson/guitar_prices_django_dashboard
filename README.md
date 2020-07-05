@@ -1,3 +1,5 @@
-# Website to compare guitar suppliers
+# Guitar prices: website to compare suppliers
 
-A Django project to gather information about the state of the guitar industry and the market prices of its products.
+A web dashboard visualised gathered information about the state of the guitar industry and the market prices of its products.
+
+Using Django and C3.js
